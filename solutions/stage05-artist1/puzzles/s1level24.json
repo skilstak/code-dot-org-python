@@ -1,0 +1,26 @@
+{
+   "startx" : 0,
+   "start_direction" : 90,
+   "puzzle" : [
+      [
+         0,
+         0,
+         100,
+         6.12323399573677e-15,
+         "black",
+         "7"
+      ],
+      [
+         100,
+         6.12323399573677e-15,
+         100,
+         -100,
+         "black",
+         "7"
+      ]
+   ],
+   "starty" : 0,
+   "type" : "artist",
+   "title" : "Stage 5: Puzzle 1 of 10",
+   "uid" : "s1level24"
+}
