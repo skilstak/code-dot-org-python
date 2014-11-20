@@ -232,12 +232,13 @@ class Artist():
         self.log = []
 
     def draw_lines(self,lines,color=None,speed=None):
-        self.canvas.speed = speed if speed else self.speed
         self.grid.draw_lines(lines,1)
-        if color:
-            self.canvas.draw_lines(lines,color=color)
-        else:
-            self.canvas.draw_lines(lines)
+        self.canvas.speed = speed if speed else self.speed
+        for line in lines:
+            if color:
+                self.canvas.draw_line(line,color=color)
+            else:
+                self.canvas.draw_line(line)
         self.canvas.speed = self.speed
 
     def _draw(self):
@@ -315,3 +316,4 @@ class Artist():
     random_colour = random_color
     colour_random = random_color
     color_random = random_color
+

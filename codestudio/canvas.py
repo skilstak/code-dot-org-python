@@ -29,27 +29,27 @@ class Canvas():
     count = 0
 
     def __init__(self):
-        self._master = tk.Tk()
-        self._master.geometry('400x400+0+0')
-        self._canvas = tk.Canvas(self._master,
+        self.tk = tk.Tk()
+        self.tk.geometry('400x400+0+0')
+        self.tkcanvas = tk.Canvas(self.tk,
                 height=400,width=400, bg='white',
                 scrollregion=(-200,-200,200,200))
-        self._canvas.pack()
+        self.tkcanvas.pack()
         self._delay = 0 
         self.title = 'codestudio'
         self.speed = 'normal'
 
     @property
     def title(self):
-        return self._master.title
+        return self.tk.title
 
     @title.setter
     def title(self,value):
-        self._master.title(value)
+        self.tk.title(value)
 
     @title.deleter
     def title(self):
-        self._master.title('')
+        self.tk.title('')
 
     @property
     def speed(self):
@@ -71,13 +71,13 @@ class Canvas():
             self._delay = round((1/value) * self.speed_scale)
 
     def exit_on_click(self):
-        self._canvas.bind('<Button>',lambda e: self._master.destroy())
-        self._canvas.mainloop()
+        self.tkcanvas.bind('<Button>',lambda e: self.tk.destroy())
+        self.tkcanvas.mainloop()
 
     def poke(self,x,y,color='black',width=0):
         n = width/2
-        self._canvas.create_oval(x-n,y-n,x+n,y+n,fill=color,outline=color)
-        self._canvas.update()
+        self.tkcanvas.create_oval(x-n,y-n,x+n,y+n,fill=color,outline=color)
+        self.tkcanvas.update()
 
     def draw_line(self,line,color=None,width=7):
         n = len(line)
@@ -89,15 +89,72 @@ class Canvas():
             color = master_color if master_color else line[4]
         if n >= 6:
             width = line[5]
-        self._canvas.create_line(coords, fill=color,
+        self.tkcanvas.create_line(coords, fill=color,
             width=width,capstyle='round',arrow=None)
         self.delay()
-        self._canvas.update()
+        self.tkcanvas.update()
 
     def delay(self,amount=None):
         amount = amount if amount else self._delay
         if amount != 0:
-            self._canvas.after(amount)
+            self.tkcanvas.after(amount)
 
-    def draw_lines(self,lines,*args,**kwargs):
-        [self.draw_line(line,*args,**kwargs) for line in lines]
+    def instance_create(self, cls, x=0, y=0):
+        instance  = cls(x,y)
+        instance.tk = self.tk
+        instance.canvas = self.tkcanvas
+        return instance 
+
+class Object():
+    """Base Canvas-aware Objects"""
+
+    def __init__(self,x=0,y=0,bearing=0):
+        self.tk = None
+        self.tkcanvas = None
+        self.x = x
+        self.y = y
+        self.bearing = bearing
+        self.sprite = None
+        self._visible = True
+
+    @property
+    def visible(self):
+        return self._visible
+
+    @visible.setter
+    def visible(self,value):
+        if value == self._visible: 
+            return
+        if self.sprite:
+            self.sprite.visible = value
+
+    @visible.deleter
+    def visible(self):
+        pass
+
+    def draw(self):
+        """Override with instructions for representing object on canvas"""
+        if not self._visible:
+            return
+        # TODO if there is a sprite draw it
+        pass
+
+class Sprite():
+    def __init__(self,fname=None,imgnum=1,xorig=0,yorig=0,speed=0,angle=0):
+        self.fname = fname
+        self._image = None
+        self._images = []
+        self.image = None
+        self.imgnum = imgnum
+        self.imgindex = 0 
+        self.xorig = xorig
+        self.yorig = yorig
+        self.speed = speed
+        self.angle = angle
+        self.load(fname)
+        self.tkcanvas.create_image(x,y,image=self.sprite)
+
+    def load(self,fname):
+        self.image = tk.PhotoImage(file=fname)
+        #TODO chop up if _stripXX.gif
+
