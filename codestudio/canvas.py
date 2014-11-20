@@ -16,6 +16,7 @@ class here does not directly subclass the tk.Canvas object.
 """
 
 import tkinter as tk
+import os
 
 class Canvas():
     speed_scale = 1000
@@ -38,6 +39,7 @@ class Canvas():
         self._delay = 0 
         self.title = 'codestudio'
         self.speed = 'normal'
+        self.objects = {}
 
     @property
     def title(self):
@@ -99,62 +101,57 @@ class Canvas():
         if amount != 0:
             self.tkcanvas.after(amount)
 
-    def instance_create(self, cls, x=0, y=0):
-        instance  = cls(x,y)
-        instance.tk = self.tk
-        instance.canvas = self.tkcanvas
-        return instance 
+    def create_sprite(self,fname):
+        sprite = _Sprite(fname,self.tkcanvas)
+        return sprite
 
-class Object():
-    """Base Canvas-aware Objects"""
-
-    def __init__(self,x=0,y=0,bearing=0):
-        self.tk = None
-        self.tkcanvas = None
-        self.x = x
-        self.y = y
-        self.bearing = bearing
-        self.sprite = None
-        self._visible = True
-
-    @property
-    def visible(self):
-        return self._visible
-
-    @visible.setter
-    def visible(self,value):
-        if value == self._visible: 
-            return
-        if self.sprite:
-            self.sprite.visible = value
-
-    @visible.deleter
-    def visible(self):
-        pass
-
-    def draw(self):
-        """Override with instructions for representing object on canvas"""
-        if not self._visible:
-            return
-        # TODO if there is a sprite draw it
-        pass
-
-class Sprite():
-    def __init__(self,fname=None,imgnum=1,xorig=0,yorig=0,speed=0,angle=0):
+class _Sprite():
+    def __init__(self,fname=None,tkcanvas=None):
+        self.tkcanvas = tkcanvas
+        self.tkid = None
         self.fname = fname
-        self._image = None
-        self._images = []
+        self.direction = 0
+        self.x = 0
+        self.y = 0
+        self.xorig = 0
+        self.yorig = 0
+        self.imgindex = 0
+        self.images = []
         self.image = None
-        self.imgnum = imgnum
-        self.imgindex = 0 
-        self.xorig = xorig
-        self.yorig = yorig
-        self.speed = speed
-        self.angle = angle
-        self.load(fname)
-        self.tkcanvas.create_image(x,y,image=self.sprite)
+        if fname:
+            self.load(fname)
 
     def load(self,fname):
-        self.image = tk.PhotoImage(file=fname)
-        #TODO chop up if _stripXX.gif
+        self.image = tk.PhotoImage(file=fname) 
+        if 'strip' in fname:
+            name,ext = os.path.splitext(os.path.basename(fname))
+            name,strip,size = name.split('_')
+            dx,dy = [int(i) for i in size.split('x')]
+            num = int(strip[5:])
+            self.images = [subimage(self.image,dx*i,0,dx*(i+1),dy) for i in range(num)]
+            print(self.images)
+            self.tkid = self.tkcanvas.create_image(self.x,self.y,
+                                                image=self.images[0])
+        else:
+            self.tkid = self.tkcanvas.create_image(self.x,self.y,
+                                                image=self.image)
+        self.tkcanvas.update()
 
+    def move(self,x,y,direction=None):
+        self.x = x
+        self.y = y
+        if direction:
+            self.direction = direction
+        self._draw()
+
+    def _draw(self):
+        # TODO update the subimage
+        # TODO divide the number of images by 360 to pick image
+        self.tkcanvas.coords(self.tkid,self.x,-self.y)
+        self.tkcanvas.lift(self.tkid)
+        self.tkcanvas.update()
+
+def subimage(base, l, t, r, b):
+    image = tk.PhotoImage()
+    image.tk.call(image, 'copy', base, '-from', l, t, r, b, '-to', 0, 0)
+    return image

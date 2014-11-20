@@ -52,6 +52,7 @@ class Artist():
     color = 'black'
     width = 7
     speed = 'normal'
+    resources = os.path.join(os.path.dirname(__file__),'res','artist')
 
     def __init__(self,proto=None):
         """In most cases you want Artist.from_json() instead."""
@@ -65,6 +66,7 @@ class Artist():
             self.log = proto.log
             self.uid = proto.uid
             self.type = proto.type
+            self.theme = proto.theme
             self.x = proto.x
             self.y = proto.y 
             self.direction = proto.start_direction
@@ -73,18 +75,21 @@ class Artist():
             self.lastx = proto.lastx
             self.lasty = proto.lasty 
             self.last_direction = proto.direction
+            self.sprite = proto.sprite
         else:
             self.canvas = Canvas()
             self.puzzle = []
             self.log = []
             self.uid = None
             self.type = 'artist'
+            self.theme = 'default'
             self.x = self.startx
             self.y = self.starty 
             self.direction = self.start_direction
             self.lastx = self.x
             self.lasty = self.y 
             self.last_direction = self.direction
+            self.sprite = None
 
         self._lines_to_draw = []          # drawing cache
 
@@ -113,7 +118,7 @@ class Artist():
         for key in conf:
             if key in ('startx','starty','start_direction'):
                 setattr(__class__,key,conf[key])
-            if key in ('puzzle','uid','title','type'):
+            if key in ('puzzle','uid','title','type','theme'):
                 setattr(self,key,conf[key])
 
     def pen_color(self,color):
@@ -133,6 +138,9 @@ class Artist():
         self.direction = self.start_direction
         self.x = self.startx
         self.y = self.starty
+        strip = os.path.join(self.resources,self.theme,
+                            'sprite_strip180_70x50.gif')
+        self.sprite = self.canvas.create_sprite(strip)
         self.grid = XYGrid().init(400,400,0)
         self.draw_lines(self.puzzle, color='lightgrey', speed='fastest')
         self.solution = XYGrid(self.grid)
@@ -239,6 +247,8 @@ class Artist():
                 self.canvas.draw_line(line,color=color)
             else:
                 self.canvas.draw_line(line)
+            print(line)
+            self.sprite.move(line[2],line[3],bearing(line))
         self.canvas.speed = self.speed
 
     def _draw(self):
