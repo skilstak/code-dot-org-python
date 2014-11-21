@@ -114,7 +114,7 @@ class _Sprite():
         self.x = 0
         self.y = 0
         self.xorig = 0
-        self.yorig = 0
+        self.yorig = 18 
         self.imgindex = 0
         self.images = []
         self.image = None
@@ -123,18 +123,20 @@ class _Sprite():
 
     def load(self,fname):
         self.image = tk.PhotoImage(file=fname) 
+        x = self.x + self.xorig
+        y = self.y + self.yorig
         if 'strip' in fname:
             name,ext = os.path.splitext(os.path.basename(fname))
             name,strip,size = name.split('_')
             dx,dy = [int(i) for i in size.split('x')]
-            num = int(strip[5:])
-            self.images = [subimage(self.image,dx*i,0,dx*(i+1),dy) for i in range(num)]
-            print(self.images)
-            self.tkid = self.tkcanvas.create_image(self.x,self.y,
+            self.imgnum = int(strip[5:])
+            self.imgdeg = self.imgnum / 360
+            self.images = [subimage(self.image,dx*i,0,dx*(i+1),dy)
+                            for i in range(self.imgnum)]
+            self.tkid = self.tkcanvas.create_image(x,y,
                                                 image=self.images[0])
         else:
-            self.tkid = self.tkcanvas.create_image(self.x,self.y,
-                                                image=self.image)
+            self.tkid = self.tkcanvas.create_image(x,y,image=self.image)
         self.tkcanvas.update()
 
     def move(self,x,y,direction=None):
@@ -145,9 +147,9 @@ class _Sprite():
         self._draw()
 
     def _draw(self):
-        # TODO update the subimage
-        # TODO divide the number of images by 360 to pick image
-        self.tkcanvas.coords(self.tkid,self.x,-self.y)
+        index = int(self.imgdeg * self.direction) - 1
+        self.tkcanvas.itemconfig(self.tkid,image=self.images[index])
+        self.tkcanvas.coords(self.tkid,self.x+self.xorig,-self.y-self.yorig)
         self.tkcanvas.lift(self.tkid)
         self.tkcanvas.update()
 

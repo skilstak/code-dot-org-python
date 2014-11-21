@@ -138,10 +138,11 @@ class Artist():
         self.direction = self.start_direction
         self.x = self.startx
         self.y = self.starty
+        self.grid = XYGrid().init(400,400,0)
         strip = os.path.join(self.resources,self.theme,
                             'sprite_strip180_70x50.gif')
         self.sprite = self.canvas.create_sprite(strip)
-        self.grid = XYGrid().init(400,400,0)
+        self.sprite.move(self.startx,self.starty,self.start_direction)
         self.draw_lines(self.puzzle, color='lightgrey', speed='fastest')
         self.solution = XYGrid(self.grid)
         self.grid = XYGrid().init(400,400,0) # wipe
@@ -241,14 +242,19 @@ class Artist():
 
     def draw_lines(self,lines,color=None,speed=None):
         self.grid.draw_lines(lines,1)
-        self.canvas.speed = speed if speed else self.speed
+        if speed:
+            self.canvas.speed = speed
+        else:
+            self.canvas.speed = self.speed
         for line in lines:
+            if self.sprite:
+                self.sprite.move(line[0],line[1],bearing(line))
             if color:
                 self.canvas.draw_line(line,color=color)
             else:
                 self.canvas.draw_line(line)
-            print(line)
-            self.sprite.move(line[2],line[3],bearing(line))
+            if self.sprite:
+                self.sprite.move(line[2],line[3],bearing(line))
         self.canvas.speed = self.speed
 
     def _draw(self):
