@@ -9,6 +9,7 @@ import sys
 sys.path.append('..')
 import codestudio
 artist = codestudio.load('s1level42')
+artist.speed = 'faster'
 
 for count2 in range(10):
     artist.color = artist.random_color()

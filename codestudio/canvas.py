@@ -21,12 +21,12 @@ import os
 class Canvas():
     speed_scale = 1000
     speed_slowest = 0.5
-    speed_slower = 5 
-    speed_slow = 10 
-    speed_normal = 40
-    speed_fast = 50
-    speed_faster = 80
-    speed_fastest = 0 
+    speed_slower = 1 
+    speed_slow = 3 
+    speed_normal = 5
+    speed_fast = 20
+    speed_faster = 40
+    speed_fastest = 100000
     count = 0
 
     def __init__(self):
@@ -55,7 +55,7 @@ class Canvas():
 
     @property
     def speed(self):
-        return self.speed
+        return round((1/self._delay) * self.speed_scale)
 
     @speed.setter
     def speed(self,value):
@@ -67,10 +67,7 @@ class Canvas():
             elif value == 'slow'   : value = self.speed_slow
             elif value == 'slower' : value = self.speed_slower
             elif value == 'slowest': value = self.speed_slowest
-        if value == 0: 
-            self._delay = 0
-        else:
-            self._delay = round((1/value) * self.speed_scale)
+        self._delay = round((1/value) * self.speed_scale)
 
     def exit_on_click(self):
         self.tkcanvas.bind('<Button>',lambda e: self.tk.destroy())

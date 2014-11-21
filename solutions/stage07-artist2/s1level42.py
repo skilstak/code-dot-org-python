@@ -2,6 +2,7 @@ import sys
 sys.path.append('../..')
 import codestudio
 a = codestudio.load('s1level42')
+a.speed = 'faster'
 
 for count in range(4):
     for count2 in range(10):

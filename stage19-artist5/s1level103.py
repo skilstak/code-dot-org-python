@@ -10,6 +10,7 @@ import sys
 sys.path.append('..')
 import codestudio
 z = codestudio.load('s1level103')
+z.speed = 'faster'
 
 for counter in range(1,201,1):
     z.color = z.random_color()
