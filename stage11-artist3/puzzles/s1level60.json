@@ -36,7 +36,7 @@
          7
       ]
    ],
-   "type" : "artist",
+   "theme": "zombie", "type" : "artist",
    "startx" : 0,
    "uid" : "s1level60"
 }

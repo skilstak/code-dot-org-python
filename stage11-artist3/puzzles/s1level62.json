@@ -3,7 +3,7 @@
    "startx" : 0,
    "starty" : 0,
    "start_direction" : 90,
-   "type" : "artist",
+   "theme": "zombie", "type" : "artist",
    "puzzle" : [
       [
          0,

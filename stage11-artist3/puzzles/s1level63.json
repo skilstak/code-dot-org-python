@@ -162,7 +162,7 @@
          7
       ]
    ],
-   "type" : "artist",
+   "theme": "zombie", "type" : "artist",
    "uid" : "s1level63",
    "start_direction" : 90,
    "starty" : 0,

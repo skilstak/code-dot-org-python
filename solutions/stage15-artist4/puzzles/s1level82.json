@@ -4,7 +4,8 @@
    "starty" : 0,
    "uid" : "s1level82",
    "start_direction" : 90,
-   "type" : "artist",
+   "theme": "zombie", "type" : "artist",
+   "theme": "zombie", "type" : "artist",
    "puzzle" : [
       [
          0,

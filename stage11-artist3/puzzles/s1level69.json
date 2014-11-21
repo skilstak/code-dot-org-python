@@ -4,6 +4,6 @@
    "uid" : "s1level69",
    "startx" : 0,
    "starty" : 0,
-   "type" : "artist",
+   "theme": "zombie", "type" : "artist",
    "puzzle" : []
 }

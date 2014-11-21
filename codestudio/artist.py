@@ -139,13 +139,13 @@ class Artist():
         self.x = self.startx
         self.y = self.starty
         self.grid = XYGrid().init(400,400,0)
+        self.draw_lines(self.puzzle, color='lightgrey', speed='fastest')
+        self.solution = XYGrid(self.grid)
+        self.grid = XYGrid().init(400,400,0) # wipe
         strip = os.path.join(self.resources,self.theme,
                             'sprite_strip180_70x50.gif')
         self.sprite = self.canvas.create_sprite(strip)
         self.sprite.move(self.startx,self.starty,self.start_direction)
-        self.draw_lines(self.puzzle, color='lightgrey', speed='fastest')
-        self.solution = XYGrid(self.grid)
-        self.grid = XYGrid().init(400,400,0) # wipe
 
     def check(self):
         if self.grid == self.solution:

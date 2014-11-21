@@ -102,5 +102,5 @@
    ],
    "start_direction" : 90,
    "startx" : 0,
-   "type" : "artist"
+   "theme": "zombie", "type" : "artist"
 }

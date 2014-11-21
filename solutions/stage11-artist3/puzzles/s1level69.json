@@ -5,5 +5,6 @@
    "startx" : 0,
    "starty" : 0,
    "type" : "artist",
+   "theme" : "zombie",
    "puzzle" : []
 }
