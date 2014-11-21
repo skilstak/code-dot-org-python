@@ -299,6 +299,8 @@ class Artist():
     def turn(self,amount):
         self.last_direction = self.direction
         self.direction += amount
+        if self.sprite:
+          self.sprite.move(self.x,self.y,self.direction)
         self.canvas.delay()
 
     def turn_right(self,amount=90):
