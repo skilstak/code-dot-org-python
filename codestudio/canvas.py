@@ -16,44 +16,46 @@ class here does not directly subclass the tk.Canvas object.
 """
 
 import tkinter as tk
+import os
 
 class Canvas():
     speed_scale = 1000
     speed_slowest = 0.5
-    speed_slower = 5 
-    speed_slow = 10 
-    speed_normal = 40
-    speed_fast = 50
-    speed_faster = 80
-    speed_fastest = 0 
+    speed_slower = 1 
+    speed_slow = 3 
+    speed_normal = 5
+    speed_fast = 20
+    speed_faster = 40
+    speed_fastest = 100000
     count = 0
 
     def __init__(self):
-        self._master = tk.Tk()
-        self._master.geometry('400x400+0+0')
-        self._canvas = tk.Canvas(self._master,
+        self.tk = tk.Tk()
+        self.tk.geometry('400x400+0+0')
+        self.tkcanvas = tk.Canvas(self.tk,
                 height=400,width=400, bg='white',
                 scrollregion=(-200,-200,200,200))
-        self._canvas.pack()
+        self.tkcanvas.pack()
         self._delay = 0 
         self.title = 'codestudio'
         self.speed = 'normal'
+        self.objects = {}
 
     @property
     def title(self):
-        return self._master.title
+        return self.tk.title
 
     @title.setter
     def title(self,value):
-        self._master.title(value)
+        self.tk.title(value)
 
     @title.deleter
     def title(self):
-        self._master.title('')
+        self.tk.title('')
 
     @property
     def speed(self):
-        return self.speed
+        return round((1/self._delay) * self.speed_scale)
 
     @speed.setter
     def speed(self,value):
@@ -65,19 +67,16 @@ class Canvas():
             elif value == 'slow'   : value = self.speed_slow
             elif value == 'slower' : value = self.speed_slower
             elif value == 'slowest': value = self.speed_slowest
-        if value == 0: 
-            self._delay = 0
-        else:
-            self._delay = round((1/value) * self.speed_scale)
+        self._delay = round((1/value) * self.speed_scale)
 
     def exit_on_click(self):
-        self._canvas.bind('<Button>',lambda e: self._master.destroy())
-        self._canvas.mainloop()
+        self.tkcanvas.bind('<Button>',lambda e: self.tk.destroy())
+        self.tkcanvas.mainloop()
 
     def poke(self,x,y,color='black',width=0):
         n = width/2
-        self._canvas.create_oval(x-n,y-n,x+n,y+n,fill=color,outline=color)
-        self._canvas.update()
+        self.tkcanvas.create_oval(x-n,y-n,x+n,y+n,fill=color,outline=color)
+        self.tkcanvas.update()
 
     def draw_line(self,line,color=None,width=7):
         n = len(line)
@@ -89,15 +88,69 @@ class Canvas():
             color = master_color if master_color else line[4]
         if n >= 6:
             width = line[5]
-        self._canvas.create_line(coords, fill=color,
+        self.tkcanvas.create_line(coords, fill=color,
             width=width,capstyle='round',arrow=None)
         self.delay()
-        self._canvas.update()
+        self.tkcanvas.update()
 
     def delay(self,amount=None):
         amount = amount if amount else self._delay
         if amount != 0:
-            self._canvas.after(amount)
+            self.tkcanvas.after(amount)
 
-    def draw_lines(self,lines,*args,**kwargs):
-        [self.draw_line(line,*args,**kwargs) for line in lines]
+    def create_sprite(self,fname):
+        sprite = _Sprite(fname,self.tkcanvas)
+        return sprite
+
+class _Sprite():
+    def __init__(self,fname=None,tkcanvas=None):
+        self.tkcanvas = tkcanvas
+        self.tkid = None
+        self.fname = fname
+        self.direction = 0
+        self.x = 0
+        self.y = 0
+        self.xorig = 0
+        self.yorig = 18 
+        self.imgindex = 0
+        self.images = []
+        self.image = None
+        if fname:
+            self.load(fname)
+
+    def load(self,fname):
+        self.image = tk.PhotoImage(file=fname) 
+        x = self.x + self.xorig
+        y = self.y + self.yorig
+        if 'strip' in fname:
+            name,ext = os.path.splitext(os.path.basename(fname))
+            name,strip,size = name.split('_')
+            dx,dy = [int(i) for i in size.split('x')]
+            self.imgnum = int(strip[5:])
+            self.imgdeg = self.imgnum / 360
+            self.images = [subimage(self.image,dx*i,0,dx*(i+1),dy)
+                            for i in range(self.imgnum)]
+            self.tkid = self.tkcanvas.create_image(x,y,
+                                                image=self.images[0])
+        else:
+            self.tkid = self.tkcanvas.create_image(x,y,image=self.image)
+        self.tkcanvas.update()
+
+    def move(self,x,y,direction=None):
+        self.x = x
+        self.y = y
+        if direction:
+            self.direction = direction
+        self._draw()
+
+    def _draw(self):
+        index = int(self.imgdeg * self.direction) - 1
+        self.tkcanvas.itemconfig(self.tkid,image=self.images[index])
+        self.tkcanvas.coords(self.tkid,self.x+self.xorig,-self.y-self.yorig)
+        self.tkcanvas.lift(self.tkid)
+        self.tkcanvas.update()
+
+def subimage(base, l, t, r, b):
+    image = tk.PhotoImage()
+    image.tk.call(image, 'copy', base, '-from', l, t, r, b, '-to', 0, 0)
+    return image

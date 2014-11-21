@@ -15,6 +15,4 @@ def draw_square(length):
         zombie.move_forward(length)
         zombie.turn_right(90)
 
-draw_square(50)                                  # ???
-
 zombie.check()

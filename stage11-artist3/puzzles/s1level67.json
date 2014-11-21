@@ -12966,5 +12966,5 @@
    ],
    "uid" : "s1level67",
    "starty" : 0,
-   "type" : "artist"
+   "theme": "zombie", "type" : "artist"
 }

@@ -9,7 +9,6 @@ import sys
 sys.path.append('../..')
 import codestudio
 a = codestudio.load('s1level36')
-a.speed = 'slower'
 
 a.color = a.random_color()
 for count in range(3):

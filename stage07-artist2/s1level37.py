@@ -9,7 +9,6 @@ import sys
 sys.path.append('..')
 import codestudio
 artist = codestudio.load('s1level37')
-artist.speed = 'slow'
 
 artist.color = artist.color_random()
 for count in range(3):

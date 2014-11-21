@@ -1,7 +1,7 @@
 {
    "startx" : 0,
    "start_direction" : 90,
-   "type" : "artist",
+   "theme": "zombie", "type" : "artist",
    "title": "Stage 11: Puzzle 1 of 11",
    "starty" : 0,
    "puzzle" : [

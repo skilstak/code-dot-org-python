@@ -32,14 +32,16 @@ from .artist import Artist
 
 def load(uid):
     fname = uid + '.json'
-    local = path.join('.',fname)
-    pname = path.join('puzzles',fname)
-    if path.isfile(local):
-        pname = local
+    wd = '.'
+    pname = path.join(wd,fname)
+    if not path.isfile(pname):
+        wd = 'puzzles'
+        pname = path.join('puzzles',fname)
     assert path.isfile(pname), 'Puzzle not found for {}.'.format(uid) 
     with open(pname, 'r') as f:
         config = json.load(f)
-        if not 'uid' in config.keys(): config['uid'] = uid
+        if not 'uid' in config.keys():
+            config['uid'] = uid
         ctype = config['type']
         if ctype == 'artist':
             player = Artist.from_json(config)

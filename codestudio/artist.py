@@ -52,6 +52,7 @@ class Artist():
     color = 'black'
     width = 7
     speed = 'normal'
+    resources = os.path.join(os.path.dirname(__file__),'res','artist')
 
     def __init__(self,proto=None):
         """In most cases you want Artist.from_json() instead."""
@@ -65,6 +66,7 @@ class Artist():
             self.log = proto.log
             self.uid = proto.uid
             self.type = proto.type
+            self.theme = proto.theme
             self.x = proto.x
             self.y = proto.y 
             self.direction = proto.start_direction
@@ -73,18 +75,21 @@ class Artist():
             self.lastx = proto.lastx
             self.lasty = proto.lasty 
             self.last_direction = proto.direction
+            self.sprite = proto.sprite
         else:
             self.canvas = Canvas()
             self.puzzle = []
             self.log = []
             self.uid = None
             self.type = 'artist'
+            self.theme = 'default'
             self.x = self.startx
             self.y = self.starty 
             self.direction = self.start_direction
             self.lastx = self.x
             self.lasty = self.y 
             self.last_direction = self.direction
+            self.sprite = None
 
         self._lines_to_draw = []          # drawing cache
 
@@ -113,7 +118,7 @@ class Artist():
         for key in conf:
             if key in ('startx','starty','start_direction'):
                 setattr(__class__,key,conf[key])
-            if key in ('puzzle','uid','title','type'):
+            if key in ('puzzle','uid','title','type','theme'):
                 setattr(self,key,conf[key])
 
     def pen_color(self,color):
@@ -137,6 +142,10 @@ class Artist():
         self.draw_lines(self.puzzle, color='lightgrey', speed='fastest')
         self.solution = XYGrid(self.grid)
         self.grid = XYGrid().init(400,400,0) # wipe
+        strip = os.path.join(self.resources,self.theme,
+                            'sprite_strip180_70x50.gif')
+        self.sprite = self.canvas.create_sprite(strip)
+        self.sprite.move(self.startx,self.starty,self.start_direction)
 
     def check(self):
         if self.grid == self.solution:
@@ -232,12 +241,20 @@ class Artist():
         self.log = []
 
     def draw_lines(self,lines,color=None,speed=None):
-        self.canvas.speed = speed if speed else self.speed
         self.grid.draw_lines(lines,1)
-        if color:
-            self.canvas.draw_lines(lines,color=color)
+        if speed:
+            self.canvas.speed = speed
         else:
-            self.canvas.draw_lines(lines)
+            self.canvas.speed = self.speed
+        for line in lines:
+            if self.sprite:
+                self.sprite.move(line[0],line[1],bearing(line))
+            if color:
+                self.canvas.draw_line(line,color=color)
+            else:
+                self.canvas.draw_line(line)
+            if self.sprite:
+                self.sprite.move(line[2],line[3],bearing(line))
         self.canvas.speed = self.speed
 
     def _draw(self):
@@ -315,3 +332,4 @@ class Artist():
     random_colour = random_color
     colour_random = random_color
     color_random = random_color
+

@@ -2,7 +2,7 @@
    "title": "Stage 11: Puzzle 8 of 11",
    "uid" : "s1level66",
    "start_direction" : 0,
-   "type" : "artist",
+   "theme": "zombie", "type" : "artist",
    "starty" : -100,
    "startx" : 0,
    "puzzle" : [

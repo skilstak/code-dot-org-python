@@ -2,6 +2,7 @@ import sys
 sys.path.append('../..')
 import codestudio
 a = codestudio.load('s1level41')
+a.speed = 'fast'
 
 a.color = a.random_colour()
 for count in range(10):
