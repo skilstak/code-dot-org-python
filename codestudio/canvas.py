@@ -136,11 +136,10 @@ class _Sprite():
             self.tkid = self.tkcanvas.create_image(x,y,image=self.image)
         self.tkcanvas.update()
 
-    def move(self,x,y,direction=None):
+    def move(self,x,y,direction):
         self.x = x
         self.y = y
-        if direction:
-            self.direction = direction
+        self.direction = direction
         self._draw()
 
     def _draw(self):
