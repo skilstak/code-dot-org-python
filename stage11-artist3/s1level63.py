@@ -10,6 +10,7 @@ sys.path.append('..')
 import codestudio
 zombie = codestudio.load('s1level63')
 zombie.speed = 'fast'
+z = zombie
 
 def draw_square(length):
     for count in range(4):

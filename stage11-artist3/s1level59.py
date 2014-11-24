@@ -10,6 +10,7 @@ import sys
 sys.path.append('..')
 import codestudio
 zombie = codestudio.load('s1level59')
+z = zombie
 
 # ???
 

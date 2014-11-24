@@ -13,6 +13,7 @@ import sys
 sys.path.append('..')
 import codestudio
 zombie = codestudio.load('s1level68')
+z = zombie
 
 def draw_snowman(length):
     zombie.left()

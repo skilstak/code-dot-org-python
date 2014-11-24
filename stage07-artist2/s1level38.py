@@ -11,6 +11,7 @@ import sys
 sys.path.append('..')
 import codestudio
 artist = codestudio.load('s1level38')
+a = artist
 
 for count2 in range(2):
     artist.color = artist.colour_random()

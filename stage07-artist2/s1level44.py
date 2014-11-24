@@ -10,6 +10,7 @@ sys.path.append('..')
 import codestudio
 artist = codestudio.load('s1level44')
 artist.speed = 'fastest'
+a = artist
 
 for count3 in range(1):                          # ???
     for count2 in range(10):

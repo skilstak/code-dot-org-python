@@ -9,6 +9,7 @@ import sys
 sys.path.append('..')
 import codestudio
 zombie = codestudio.load('s1level65')
+z = zombie
 
 # zombie.move_forward(25)
 # zombie.turn_right(90)

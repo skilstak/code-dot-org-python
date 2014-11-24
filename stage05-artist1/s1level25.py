@@ -9,6 +9,7 @@ import sys
 sys.path.append('..')
 import codestudio
 artist = codestudio.load('s1level25')
+a = artist
 
 artist.color = 'red'
 

@@ -9,6 +9,7 @@ import sys
 sys.path.append('..')
 import codestudio
 artist = codestudio.load('s1level33')
+a = artist
 
 artist.color = artist.random_color()
 artist.width = 1

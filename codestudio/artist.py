@@ -264,7 +264,7 @@ class Artist():
     def _move(self,amount):
         (self.x,self.y) = xy(self.x,self.y,self.direction,amount)
 
-    def move(self,amount):
+    def move(self,amount=100):
         self.lastx = self.x
         self.lasty = self.y
         self._move(amount)
@@ -281,22 +281,22 @@ class Artist():
     forward = move
     fd = move
 
-    def move_backward(self,amount):
+    def move_backward(self,amount=100):
         self.move(-amount)
 
     backward = move_backward
     back = move_backward
     bk = move_backward
 
-    def jump(self,amount):
+    def jump(self,amount=100):
         self._move(amount)
 
     jump_forward = jump
 
-    def jump_backward(self,amount):
+    def jump_backward(self,amount=100):
         self.jump(-amount)
 
-    def turn(self,amount):
+    def turn(self,amount=90):
         self.last_direction = self.direction
         self.direction += amount
         self.direction %= 360

@@ -12,6 +12,7 @@ import sys
 sys.path.append('..')
 import codestudio
 zombie = codestudio.load('s1level61')
+z = zombie
 
 def draw_square(length):
     for count in range(4):

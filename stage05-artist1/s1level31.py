@@ -10,6 +10,7 @@ import sys
 sys.path.append('..')
 import codestudio
 artist = codestudio.load('s1level31')
+a = artist
 
 artist.color = artist.random_color()
 artist.move_forward(100)
