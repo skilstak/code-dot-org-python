@@ -1,6 +1,6 @@
 """Stage 5: Puzzle 8 of 10
 
-Ok, try to figure out what happens if you run this code (or run it).
+Ok, try to figure out what happens when you run this code.
 Then, repeat it enough times to complete the drawing. The
 colors will be different every time.
 
