@@ -1,7 +1,8 @@
-"""Stage 11: Puzzle 7 of 11
+"""eStage 11: Puzzle 7 of 11
 
-Here's a program to draw a spiral Make a new program using counter loop
-and your `draw_square()` function instead of the long way.
+Here's a program to draw a spiral, but the lines of code are disabled
+by commenting them out. Make a new program using a 'for' loop (like
+in the last puzzle) using only three lines of code instead.
 
 """
 
