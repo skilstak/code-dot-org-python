@@ -1,8 +1,8 @@
-"""eStage 11: Puzzle 7 of 11
+"""Stage 11: Puzzle 7 of 11
 
 Here's a program to draw a spiral, but the lines of code are disabled
 by commenting them out. Make a new program using a 'for' loop (like
-in the last puzzle) using only three lines of code instead.
+in the last puzzle) using only three lines of code.
 
 """
 
