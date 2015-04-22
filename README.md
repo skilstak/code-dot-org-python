@@ -1,6 +1,10 @@
 *Introduction to Computer Science*<br>Code.org in Python
 ========================================================
 
+***This project has since been superceded by our use of [CodeCombat.com](http://codecombat.com) and our own [Python-0](http://github.com/skilstak/python-0) and [Python-1](http://github.com/skilstak.com/python-1) offerings
+which teach real, typed Python the way college students and professions use it, from the Linux Bash command line. (Python IDLE sees far less actual use in the real world.)***
+
+
 This repo contains the puzzles from the [Introduction to Computer Science
 on code.org](http://learn.code.org/s/1) written in Python3 suitable for
 any learning environment requiring only vanilla Python3 to be installed.
