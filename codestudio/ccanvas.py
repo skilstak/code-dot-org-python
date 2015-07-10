@@ -1,4 +1,4 @@
-"""The Canvas (game board) implemented in tkinter.
+"""The Canvas (game board) implemented in ncurses for terminals.
 
 While the 'board' metaphor is better for some of the puzzles, 'canvas'
 works for the artist and is generally what most graphics frameworks
@@ -11,11 +11,11 @@ the other classes or functions in the `codestudio` module refer directly
 to these implementation details. This allows these canvas classes and
 modules to be implemented in any framework without breaking the rest of
 the system. This separation of concerns is also the reason our Canvas
-class here does not directly subclass the tk.Canvas object.
+class here does not directly subclass any canvas class.
 
 """
 
-import tkinter as tk
+import curses
 import os
 
 class Canvas():
@@ -30,12 +30,12 @@ class Canvas():
     count = 0
 
     def __init__(self):
-        self.tk = tk.Tk()
-        self.tk.geometry('400x400+0+0')
-        self.tkcanvas = tk.Canvas(self.tk,
+        self._tk = tk.Tk()
+        self._tk.geometry('400x400+0+0')
+        self._tkcanvas = tk.Canvas(self._tk,
                 height=400,width=400, bg='white',
                 scrollregion=(-200,-200,200,200))
-        self.tkcanvas.pack()
+        self._tkcanvas.pack()
         self._delay = 0 
         self.title = 'codestudio'
         self.speed = 'normal'
@@ -43,15 +43,15 @@ class Canvas():
 
     @property
     def title(self):
-        return self.tk.title
+        return self._tk.title
 
     @title.setter
     def title(self,value):
-        self.tk.title(value)
+        self._tk.title(value)
 
     @title.deleter
     def title(self):
-        self.tk.title('')
+        self._tk.title('')
 
     @property
     def speed(self):
@@ -70,13 +70,13 @@ class Canvas():
         self._delay = round((1/value) * self.speed_scale)
 
     def exit_on_click(self):
-        self.tkcanvas.bind('<Button>',lambda e: self.tk.destroy())
-        self.tkcanvas.mainloop()
+        self._tkcanvas.bind('<Button>',lambda e: self._tk.destroy())
+        self._tkcanvas.mainloop()
 
     def poke(self,x,y,color='black',width=0):
         n = width/2
-        self.tkcanvas.create_oval(x-n,y-n,x+n,y+n,fill=color,outline=color)
-        self.tkcanvas.update()
+        self._tkcanvas.create_oval(x-n,y-n,x+n,y+n,fill=color,outline=color)
+        self._tkcanvas.update()
 
     def draw_line(self,line,color=None,width=7):
         n = len(line)
@@ -88,24 +88,24 @@ class Canvas():
             color = master_color if master_color else line[4]
         if n >= 6:
             width = line[5]
-        self.tkcanvas.create_line(coords, fill=color,
+        self._tkcanvas.create_line(coords, fill=color,
             width=width,capstyle='round',arrow=None)
         self.delay()
-        self.tkcanvas.update()
+        self._tkcanvas.update()
 
     def delay(self,amount=None):
         amount = amount if amount else self._delay
         if amount != 0:
-            self.tkcanvas.after(amount)
+            self._tkcanvas.after(amount)
 
     def create_sprite(self,fname):
-        sprite = _Sprite(fname,self.tkcanvas)
+        sprite = _Sprite(fname,self._tkcanvas)
         return sprite
 
 class _Sprite():
-    def __init__(self,fname=None,tkcanvas=None):
-        self.tkcanvas = tkcanvas
-        self.tkid = None
+    def __init__(self,fname=None,_tkcanvas=None):
+        self._tkcanvas = _tkcanvas
+        self._tkid = None
         self.fname = fname
         self.direction = 0
         self.x = 0
@@ -130,11 +130,11 @@ class _Sprite():
             self.imgdeg = self.imgnum / 360
             self.images = [subimage(self.image,dx*i,0,dx*(i+1),dy)
                             for i in range(self.imgnum)]
-            self.tkid = self.tkcanvas.create_image(x,y,
+            self._tkid = self._tkcanvas.create_image(x,y,
                                                 image=self.images[0])
         else:
-            self.tkid = self.tkcanvas.create_image(x,y,image=self.image)
-        self.tkcanvas.update()
+            self._tkid = self._tkcanvas.create_image(x,y,image=self.image)
+        self._tkcanvas.update()
 
     def move(self,x,y,direction):
         self.x = x
@@ -144,12 +144,12 @@ class _Sprite():
 
     def _draw(self):
         index = int(self.imgdeg * self.direction) - 1
-        self.tkcanvas.itemconfig(self.tkid,image=self.images[index])
-        self.tkcanvas.coords(self.tkid,self.x+self.xorig,-self.y-self.yorig)
-        self.tkcanvas.lift(self.tkid)
-        self.tkcanvas.update()
+        self._tkcanvas.itemconfig(self._tkid,image=self.images[index])
+        self._tkcanvas.coords(self._tkid,self.x+self.xorig,-self.y-self.yorig)
+        self._tkcanvas.lift(self._tkid)
+        self._tkcanvas.update()
 
 def subimage(base, l, t, r, b):
     image = tk.PhotoImage()
-    image.tk.call(image, 'copy', base, '-from', l, t, r, b, '-to', 0, 0)
+    image._tk.call(image, 'copy', base, '-from', l, t, r, b, '-to', 0, 0)
     return image

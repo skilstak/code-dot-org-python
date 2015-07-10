@@ -42,7 +42,7 @@ import json
 import math
 import random
 
-from .canvas import Canvas
+from .tkcanvas import Canvas
 from .gamegrids import XYGrid,xy,slope,bearing,length
 
 class Artist():
